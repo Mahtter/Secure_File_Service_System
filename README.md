@@ -37,7 +37,7 @@ Facilitates user interaction and orchestrates communication.
 * **Responsibilities**: Initiates handshakes, performs login, and forwards tokens to the File Server for authorized operations.
 
 ### 4. Cryptographic Heartbeat (`Communication.py`)
-The foundational library that implements the `SecureSession` class and core cryptographic functions13, 14]. It handles AES-GCM encryption, X25519 handshakes, and token verification.
+The foundational library that implements the `SecureSession` class and core cryptographic functions. It handles AES-GCM encryption, X25519 handshakes, and token verification.
 
 ---
 
