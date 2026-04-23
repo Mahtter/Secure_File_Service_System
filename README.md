@@ -1,9 +1,9 @@
 # Secure File Service System
 
 ## Overview
-[cite_start]The **Secure File Service System** is a distributed architecture designed to facilitate secure remote file operations across untrusted network boundaries[cite: 8]. [cite_start]Adopting a **Zero-Trust** modular approach, the system strictly decouples identity management from resource hosting[cite: 9]. [cite_start]It is composed of three core entities: the **Group Server (GS)**, the **File Server (FS)**, and the **Client Application**[cite: 10].
+The **Secure File Service System** is a distributed architecture designed to facilitate secure remote file operations across untrusted network boundaries. Adopting a **Zero-Trust** modular approach, the system strictly decouples identity management from resource hosting. It is composed of three core entities: the **Group Server (GS)**, the **File Server (FS)**, and the **Client Application**.
 
-[cite_start]This project was developed for educational purposes to simulate real-world secure system deployments, focusing on establishing trust between entities without exposing long-term secrets to the network[cite: 4, 11]. [cite_start]It leverages modern cryptographic primitives, including Ed25519 for identity, X25519 for session establishment, and AES-256-GCM for authenticated data transit[cite: 12].
+This project was developed for educational purposes to simulate real-world secure system deployments, focusing on establishing trust between entities without exposing long-term secrets to the network4. It leverages modern cryptographic primitives, including Ed25519 for identity, X25519 for session establishment, and AES-256-GCM for authenticated data transit.
 
 ---
 
@@ -11,33 +11,33 @@
 
 The system implements specific cryptographic defenses to address common vulnerabilities:
 
-* [cite_start]**Password Security**: Utilizes **PBKDF2-HMAC-SHA256** hashing with a 128-bit salt and 200,000 iterations[cite: 30]. [cite_start]Passwords are never stored in plaintext and only travel through encrypted channels[cite: 31, 89].
-* [cite_start]**Identity Protection**: Employs **Ed25519 digital signatures**[cite: 12]. [cite_start]Only the Group Server possesses the private signing key, while the File Server uses the public key to verify token authenticity, preventing token forgery[cite: 34, 38, 39].
-* [cite_start]**Confidentiality & Integrity**: Uses **AES-256-GCM** authenticated encryption[cite: 18]. [cite_start]Every message is protected by a unique 12-byte IV, ensuring that even identical commands result in different ciphertexts[cite: 20, 86].
-* [cite_start]**Replay Defense**: Implements a two-pronged defense: a **128-bit random nonce** tracked within the session and **expiration timestamps** embedded within signed user tokens[cite: 21, 22, 55, 56].
-* [cite_start]**Forward Secrecy**: Uses **X25519 Elliptic Curve Diffie-Hellman (ECDHE)**[cite: 25]. [cite_start]Session keys are ephemeral and independent of long-term identity keys, ensuring they are mathematically unrecoverable after a session ends[cite: 26, 27].
-* [cite_start]**Key Management**: Applies strict file system permissions (**mode 0600**) for private keys and the principle of least privilege, ensuring the File Server never handles private signing keys[cite: 43, 95].
+* **Password Security**: Utilizes **PBKDF2-HMAC-SHA256** hashing with a 128-bit salt and 200,000 iterations. Passwords are never stored in plaintext and only travel through encrypted channels.
+* **Identity Protection**: Employs **Ed25519 digital signatures**. Only the Group Server possesses the private signing key, while the File Server uses the public key to verify token authenticity, preventing token forgery.
+* **Confidentiality & Integrity**: Uses **AES-256-GCM** authenticated encryption. Every message is protected by a unique 12-byte IV, ensuring that even identical commands result in different ciphertexts.
+* **Replay Defense**: Implements a two-pronged defense: a **128-bit random nonce** tracked within the session and **expiration timestamps** embedded within signed user tokens.
+* **Forward Secrecy**: Uses **X25519 Elliptic Curve Diffie-Hellman (ECDHE)**. Session keys are ephemeral and independent of long-term identity keys, ensuring they are mathematically unrecoverable after a session ends.
+* **Key Management**: Applies strict file system permissions (**mode 0600**) for private keys and the principle of least privilege, ensuring the File Server never handles private signing keys.
 
 ---
 
 ## System Components
 
 ### 1. Group Server (`GroupServer.py`)
-[cite_start]Acts as the primary authority for the system[cite: 33].
-* [cite_start]**Responsibilities**: User authentication, group management, and issuing signed `UserTokens`[cite: 36, 37].
-* [cite_start]**Network Config**: Runs on port 2004[cite: 100].
+Acts as the primary authority for the system.
+* **Responsibilities**: User authentication, group management, and issuing signed `UserTokens`.
+* **Network Config**: Runs on port 2004.
 
 ### 2. File Server (`FileServer.py`)
-[cite_start]Acts as the guardian of the physical data[cite: 46].
-* [cite_start]**Responsibilities**: Enforces Access Control Lists (ACLs) by verifying the `UserToken` provided by the client[cite: 47]. [cite_start]It is entirely stateless regarding user credentials[cite: 49].
-* [cite_start]**Network Config**: Runs on port 2005[cite: 101].
+Acts as the guardian of the physical data.
+* **Responsibilities**: Enforces Access Control Lists (ACLs) by verifying the `UserToken` provided by the client. It is entirely stateless regarding user credentials.
+* **Network Config**: Runs on port 2005.
 
 ### 3. Client Application (`Client.py`)
-[cite_start]Facilitates user interaction and orchestrates communication[cite: 67, 68].
-* [cite_start]**Responsibilities**: Initiates handshakes, performs login, and forwards tokens to the File Server for authorized operations[cite: 70, 76].
+Facilitates user interaction and orchestrates communication.
+* **Responsibilities**: Initiates handshakes, performs login, and forwards tokens to the File Server for authorized operations.
 
 ### 4. Cryptographic Heartbeat (`Communication.py`)
-[cite_start]The foundational library that implements the `SecureSession` class and core cryptographic functions[cite: 13, 14]. [cite_start]It handles AES-GCM encryption, X25519 handshakes, and token verification[cite: 16, 25].
+The foundational library that implements the `SecureSession` class and core cryptographic functions13, 14]. It handles AES-GCM encryption, X25519 handshakes, and token verification.
 
 ---
 
@@ -63,13 +63,13 @@ To simulate the distributed environment, run the servers in separate terminal wi
     ```bash
     python GroupServer.py
     ```
-    *Note: On first run, this generates the Ed25519 signing keys[cite: 100].*
+    *Note: On first run, this generates the Ed25519 signing keys.*
 
 2.  **Initialize the File Server**:
     ```bash
     python FileServer.py
     ```
-    *Note: The File Server requires the public key generated by the Group Server to start[cite: 101].*
+    *Note: The File Server requires the public key generated by the Group Server to start.*
 
 3.  **Run the Client**:
     ```bash
@@ -81,20 +81,20 @@ To simulate the distributed environment, run the servers in separate terminal wi
 ## Example Usage Commands
 
 Once the client is connected, you can perform the following operations:
-* [cite_start]`connectGroup`: Establish a secure session with the Group Server[cite: 71].
-* [cite_start]`connectFile`: Establish a secure session with the File Server[cite: 71].
+* `connectGroup`: Establish a secure session with the Group Server.
+* `connectFile`: Establish a secure session with the File Server.
 * `createUser <name> <pass>`: Create a new user (requires Admin group membership).
-* [cite_start]`upload <src> <dest> <group>`: Upload a file to a specific group[cite: 50].
-* [cite_start]`download <src> <dest>`: Download a file (access is verified against group membership)[cite: 59, 64].
-* [cite_start]`listFiles`: View files you are authorized to see based on your token[cite: 85].
+* `upload <src> <dest> <group>`: Upload a file to a specific group.
+* `download <src> <dest>`: Download a file (access is verified against group membership).
+* `listFiles`: View files you are authorized to see based on your token.
 
 ---
 
 ## Technical Specifications
 | Primitive | Implementation |
 | :--- | :--- |
-| **Asymmetric Signing** | [cite_start]Ed25519 [cite: 12] |
-| **Key Exchange** | [cite_start]X25519 (ECDHE) [cite: 25] |
-| **Authenticated Encryption** | [cite_start]AES-256-GCM (AEAD) [cite: 12, 23] |
-| **Password Hashing** | [cite_start]PBKDF2-HMAC-SHA256 [cite: 30] |
-| **Token Lifetime** | [cite_start]3600 seconds (1 hour) [cite: 100] |
+| **Asymmetric Signing** | Ed25519 |
+| **Key Exchange** | X25519 (ECDHE) |
+| **Authenticated Encryption** | AES-256-GCM (AEAD) |
+| **Password Hashing** | PBKDF2-HMAC-SHA256 |
+| **Token Lifetime** | 3600 seconds (1 hour) |
